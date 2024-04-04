@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Aleo Local Block Explorer</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <!-- 스타일시트 연결 -->
+    <script src="js/app.js" defer></script>
+    <!-- 자바스크립트 파일 연결 -->
+  </head>
+  <body>
+    <header>
+      <h1>Aleo Local Block Explorer</h1>
+    </header>
+    <main>
+      <section id="search">
+        <input type="text" placeholder="Search by hash..." />
+        <button>Search</button>
+      </section>
+      <section id="latest-info">
+        <div class="info">
+          <h2>Latest Block</h2>
+          <div id="latest-block">...</div>
+        </div>
+        <div class="info">
+          <h2>Latest Hash</h2>
+          <div id="latest-hash">...</div>
+        </div>
+        <div class="info">
+          <h2>StateRoot</h2>
+          <div id="state-root">...</div>
+        </div>
+      </section>
+      <section id="details">
+        <h2>Latest Block Detail</h2>
+        <pre id="latest-block-detail">...</pre>
+        <h2>Latest TX</h2>
+        <pre id="latest-tx">...</pre>
+      </section>
+    </main>
+  </body>
+</html>
