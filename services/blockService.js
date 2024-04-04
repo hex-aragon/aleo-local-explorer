@@ -75,9 +75,7 @@ const scheduleDataFetching = () => {
       const response = await fetch(
         "http://localhost:3030/testnet3/latest/block"
       );
-      console.log("response", response);
       const blockData = await response.json();
-      console.log("blockData", blockData);
       await blockModel
         .insertBlockData(blockData)
         .then((insertId) => {
@@ -89,6 +87,32 @@ const scheduleDataFetching = () => {
 
       console.log("Data fetched and inserted at:", new Date());
       console.log("done", blockData);
+      console.log("block_num me", typeof blockData);
+      console.log("block_num me", typeof response);
+
+      console.log(blockData.metadata_json, typeof blockData.metadata_json);
+      console.log(JSON.stringify(blockData));
+      blockData_json = JSON.stringify(blockData);
+      console.log(typeof blockData_json);
+      let block_num = JSON.parse(blockData_json.metadata);
+      console.log("block_num", block_num);
+
+      //let block_num = JSON.parse(blockData.metadata).height;
+      // const mempool_response = await fetch(
+      //   "http://localhost:3030/testnet3/latest/block"
+      // );
+      // const mempool_tx = await mem_pool_response.json();
+      // await blockModel
+      //   .insertBlockData(blockData)
+      //   .then((insertId) => {
+      //     console.log(`Inserted block data with id: ${insertId}`);
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error inserting block data:", error);
+      //   });
+
+      // console.log("Data fetched and inserted at:", new Date());
+      // console.log("done", blockData);
     } catch (error) {
       console.error("Error fetching and inserting data:", error);
     }
