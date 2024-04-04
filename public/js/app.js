@@ -1,22 +1,55 @@
 document.addEventListener("DOMContentLoaded", () => {
   const latestBlockElement = document.getElementById("latest-block");
   const latestHashElement = document.getElementById("latest-hash");
-  const stateRootElement = document.getElementById("state-root");
-  const latestBlockDetailElement = document.getElementById(
+  const latestBlockHeaderMetadata = document.getElementById(
     "latest-block-detail"
   );
-  const latestTXElement = document.getElementById("latest-tx");
+  const latestBlockAuthElement = document.getElementById("authority");
+  const latestBlockRatifications =
+    document.getElementById("ratifications_json");
+  const abortTxElement = document.getElementById("abortTx");
+  const stateRootElement = document.getElementById("state-root");
+  const latestBlockTx = document.getElementById("latest-block-tx");
 
-  // 블록 정보를 가져와서 화면에 표시하는 함수
-  function fetchLatestBlockInfo() {
-    // 여기에 백엔드에서 정보를 가져오는 코드 작성
+  async function fetchLatestBlockInfo() {
+    try {
+      const response = await fetch("http://localhost:3000/dashboard");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const blockData = await response.json();
+
+      console.log("blockData", blockData, typeof blockData);
+
+      console.log(
+        "blockData.ratifications_json",
+        blockData.ratifications_json,
+        typeof blockData.ratifications_json
+      );
+
+      latestBlockElement.textContent =
+        JSON.parse(blockData.metadata_json).height || "N/A";
+      latestBlockTx.textContent = blockData.transactions_json;
+      latestBlockHeaderMetadata.textContent = blockData.metadata_json || "N/A";
+      latestBlockAuthElement.textContent = blockData.authority_json || "N/A";
+      latestBlockRatifications.textContent =
+        blockData.ratifications_json || "N/A";
+      latestHashElement.textContent = blockData.block_hash || "N/A";
+      stateRootElement.textContent = blockData.previous_state_root || "N/A";
+      abortTxElement.textContent = blockData.aborted_transaction_ids_json;
+      // ... update other elements as needed
+    } catch (error) {
+      console.error("Error fetching latest block info:", error);
+    }
   }
 
-  // 검색 버튼 이벤트 리스너
+  // Add event listener to the search button
   document.querySelector("#search button").addEventListener("click", () => {
-    // 검색 로직을 구현
+    // Implement the search functionality
   });
 
-  // 초기 데이터 로드
+  // Load initial data
   fetchLatestBlockInfo();
 });
+
+//
