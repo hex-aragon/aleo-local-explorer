@@ -84,6 +84,20 @@ const getBlockAbortedTransactionIdsData = () => {
   });
 };
 
+const getLatestPeerData = () => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "SELECT * FROM peer_data ORDER BY id DESC LIMIT 1",
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results[0]);
+      }
+    );
+  });
+};
+
 const insertBlockData = (blockData) => {
   return new Promise((resolve, reject) => {
     const query = `
@@ -129,12 +143,27 @@ const insertBlockData = (blockData) => {
   });
 };
 
+const insertPeer = (peerData) => {
+  return new Promise((resolve, reject) => {
+    const query = "INSERT INTO peer_data (data) VALUES (?)";
+    const values = peerData;
+    pool.query(query, values, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results.insertId);
+    });
+  });
+};
+
 module.exports = {
   getLatestBlockData,
   getBlockHeaderData,
-  insertBlockData,
   getBlockAuthData,
   getBlockRatificationsData,
   getBlockAbortedTransactionIdsData,
   getBlockTxData,
+  getLatestPeerData,
+  insertBlockData,
+  insertPeer,
 };

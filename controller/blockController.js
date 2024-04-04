@@ -3,6 +3,8 @@ const blockService = require("../services/blockService");
 const getDashboardData = async (req, res) => {
   try {
     const data = await blockService.fetchDashboardData();
+    const peer_data = await blockService.getBlockPeerSerice;
+    data.peer_data = peer_data;
     res.json(data);
   } catch (error) {
     res.status(500).send(error.message);
@@ -54,6 +56,15 @@ const getBlockAbortedTransactionIds = async (req, res) => {
   }
 };
 
+const getBlockPeer = async (req, res) => {
+  try {
+    const data = await blockService.getBlockPeerSerice();
+    res.json(data);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 module.exports = {
   getDashboardData,
   getBlockAuth,
@@ -61,4 +72,5 @@ module.exports = {
   getBlockRatifications,
   getBlockAbortedTransactionIds,
   getBlockTx,
+  getBlockPeer,
 };

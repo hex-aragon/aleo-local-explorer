@@ -68,6 +68,17 @@ const getBlockAbortedTransactionIdsSerice = async () => {
   }
 };
 
+const getBlockPeerSerice = async () => {
+  try {
+    const data = await blockModel.getLatestPeerData();
+    console.log("data", data);
+
+    return blockModel.getLatestPeerData();
+  } catch (e) {
+    throw e;
+  }
+};
+
 // 주기적인 작업 설정
 const scheduleDataFetching = () => {
   cron.schedule("* * * * *", async () => {
@@ -85,36 +96,27 @@ const scheduleDataFetching = () => {
           console.error("Error inserting block data:", error);
         });
 
-      console.log("Data fetched and inserted at:", new Date());
-      console.log("done", blockData);
-      console.log("block_num me", typeof blockData);
-      console.log("block_num me", typeof response);
+      const peer_get_all_fetch = await fetch(
+        "http://localhost:3030/testnet3/peers/all"
+      );
 
-      console.log(blockData.metadata_json, typeof blockData.metadata_json);
-      console.log(JSON.stringify(blockData));
-      blockData_json = JSON.stringify(blockData);
-      console.log(typeof blockData_json);
-      let block_num = JSON.parse(blockData_json.metadata);
-      console.log("block_num", block_num);
+      console.log("peer_get_all_fetch", peer_get_all_fetch);
+      const peer_get_all = await peer_get_all_fetch.json();
+      console.log("peer_get_all", peer_get_all, peer_get_all.length);
+      console.log(JSON.stringify(peer_get_all));
 
-      //let block_num = JSON.parse(blockData.metadata).height;
-      // const mempool_response = await fetch(
-      //   "http://localhost:3030/testnet3/latest/block"
-      // );
-      // const mempool_tx = await mem_pool_response.json();
-      // await blockModel
-      //   .insertBlockData(blockData)
-      //   .then((insertId) => {
-      //     console.log(`Inserted block data with id: ${insertId}`);
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error inserting block data:", error);
-      //   });
-
-      // console.log("Data fetched and inserted at:", new Date());
-      // console.log("done", blockData);
+      //insertPeer
+      let peerList = JSON.stringify(peer_get_all);
+      await blockModel
+        .insertPeer(peerList)
+        .then((insertId) => {
+          console.log(`Inserted peer_get_all data with id: ${insertId}`);
+        })
+        .catch((error) => {
+          console.error("Error inserting peer_get_all data:", error);
+        });
     } catch (error) {
-      console.error("Error fetching and inserting data:", error);
+      console.error("Error fetching and inserting peer_get_all:", error);
     }
   });
 };
@@ -127,4 +129,5 @@ module.exports = {
   getBlockRatificationsService,
   getBlockAbortedTransactionIdsSerice,
   getBlockTransactionService,
+  getBlockPeerSerice,
 };

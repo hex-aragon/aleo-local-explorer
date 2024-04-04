@@ -8,5 +8,6 @@ router.get("/block-auth", blockController.getBlockAuth);
 router.get("/block-ratification", blockController.getBlockRatifications);
 router.get("/block-tx", blockController.getBlockTx);
 router.get("/abort-tx", blockController.getBlockAbortedTransactionIds);
+router.get("/block-peer", blockController.getBlockPeer);
 
 module.exports = router;

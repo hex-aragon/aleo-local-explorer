@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const abortTxElement = document.getElementById("abortTx");
   const stateRootElement = document.getElementById("state-root");
   const latestBlockTx = document.getElementById("latest-block-tx");
+  const latestPeerAll = document.getElementById("peer-data");
 
   async function fetchLatestBlockInfo() {
     try {
@@ -19,6 +20,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       const blockData = await response.json();
 
+      const response2 = await fetch("http://localhost:3000/block-peer");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const peerData = await response2.json();
+
+      console.log("peerData", peerData);
       console.log("blockData", blockData, typeof blockData);
 
       console.log(
@@ -29,15 +37,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       latestBlockElement.textContent =
         JSON.parse(blockData.metadata_json).height || "N/A";
-      latestBlockTx.textContent = blockData.transactions_json;
+      latestBlockTx.textContent = blockData.transactions_json || "N/A";
       latestBlockHeaderMetadata.textContent = blockData.metadata_json || "N/A";
       latestBlockAuthElement.textContent = blockData.authority_json || "N/A";
       latestBlockRatifications.textContent =
         blockData.ratifications_json || "N/A";
       latestHashElement.textContent = blockData.block_hash || "N/A";
       stateRootElement.textContent = blockData.previous_state_root || "N/A";
-      abortTxElement.textContent = blockData.aborted_transaction_ids_json;
-      // ... update other elements as needed
+      abortTxElement.textContent =
+        blockData.aborted_transaction_ids_json || "N/A";
+
+      latestPeerAll.textContent = peerData.data || "N/A";
     } catch (error) {
       console.error("Error fetching latest block info:", error);
     }

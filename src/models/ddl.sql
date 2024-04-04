@@ -1,3 +1,5 @@
+CREATE DATABASE aleo_local;
+
 CREATE TABLE block_data (
   id INT AUTO_INCREMENT PRIMARY KEY,
   block_hash VARCHAR(255),
@@ -14,3 +16,9 @@ CREATE TABLE block_data (
   transactions_json JSON,
   aborted_transaction_ids_json JSON
 );
+
+CREATE TABLE peer_data (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    data TEXT
+);
+
