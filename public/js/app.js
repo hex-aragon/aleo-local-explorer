@@ -53,10 +53,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Add event listener to the search button
-  document.querySelector("#search button").addEventListener("click", () => {
-    // Implement the search functionality
-  });
+  // 검색 버튼 클릭 이벤트 리스너 내에 있는 코드
+  document
+    .querySelector("#search button")
+    .addEventListener("click", async () => {
+      const searchInput = document.querySelector("#search input[type='text']");
+      const searchTerm = searchInput.value; // 입력된 검색어 가져오기
+      if (!searchTerm) {
+        alert("Please enter a search term.");
+        return;
+      }
+      try {
+        const response = await fetch(
+          `http://localhost:3000/search?${searchTerm}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const searchData = await response.json();
+
+        // 검색 결과를 화면에 표시하는 코드를 여기에 추가합니다.
+        // 예시:
+        document.querySelector("#search-result-header").textContent =
+          "Search Result:";
+        document.querySelector("#search-result-body").textContent =
+          JSON.stringify(searchData, null, 2);
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+    });
 
   // Load initial data
   fetchLatestBlockInfo();
