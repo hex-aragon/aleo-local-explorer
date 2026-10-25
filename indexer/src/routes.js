@@ -24,8 +24,11 @@ function createRouter(db) {
   })
 
   router.get('/blocks', (req, res) => {
-    const limit = Math.min(Number(req.query.limit) || 25, 100)
-    const before = req.query.before !== undefined ? Number(req.query.before) : undefined
+    const parsedLimit = Number.parseInt(req.query.limit, 10)
+    const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? Math.min(parsedLimit, 100) : 25
+
+    const parsedBefore = Number.parseInt(req.query.before, 10)
+    const before = Number.isFinite(parsedBefore) ? parsedBefore : undefined
 
     const rows = before !== undefined ? listBlocksBefore.all(before, limit) : listBlocks.all(limit)
     res.json(rows)
