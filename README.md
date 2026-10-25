@@ -1,53 +1,45 @@
-# aleo-local-explorer
+# Aleo Local Explorer
 
-## Image
+A block explorer for your own local Aleo devnet node — point it at your
+node's RPC address and browse blocks, transactions, and peers.
 
-![poster](./local-aleo-block-explorer.png)
+Live, hosted version: **https://hex-aragon.github.io/aleo-local-explorer/**
 
-## Dev
+It's a static site with no backend of its own — it talks directly to
+whatever Aleo node you point it at (default `http://localhost:3030`,
+network `testnet`), straight from your browser. That works because the
+node's REST API allows cross-origin requests from any origin, and browsers
+treat `localhost`/`127.0.0.1` as safe to call from an HTTPS page. So you can
+use the hosted link above against your own local node — nothing to install
+to get started.
 
-```
-node : v18.20.0
-npm  : 10.5.0
-os   : Ubuntu 22.04.4 LTS
-mysql: 8.0.36-0ubuntu0.22.04.1
+## Project layout
 
-```
+- **`frontend/`** — the explorer itself (React + Vite + Tailwind). This is
+  what's deployed to GitHub Pages.
+- **`indexer/`** — an *optional* local service you can run yourself for
+  block-history persistence beyond what your node can serve live. See
+  [`indexer/README.md`](./indexer/README.md).
 
-## Install
-
-```
-git clone https://github.com/hex-aragon/aleo-local-explorer
-cd aleo-local-explorer
-npm i
-```
-
-## Getting Started
-
-devnet.sh : https://raw.githubusercontent.com/AleoHQ/snarkOS/testnet3/devnet.sh
+## Running the explorer locally
 
 ```
-# start devnet
-./devnet.sh
-
-# start mysql db
-systemctl start mysql
-
-# start nodemon
-nodemon server.js
+cd frontend
+npm install
+npm run dev
 ```
 
-## Description
+Open the printed local URL, then go to **Settings** and point it at your
+node's RPC URL and network name if they differ from the defaults.
 
-```
-We need BlockExplore in our local development environment because it's too hard and time-consuming to manually request all the API data to the browser to see it, so to compensate for that shortcoming, I made the local devnet data viewable with Explore.
+## Running your own Aleo devnet
 
-```
+Any local Aleo devnet whose REST API is reachable at the address you
+configure in Settings will work — snarkOS nodes expose this via the
+`--rest` flag (e.g. `--rest 0.0.0.0:3030`). Refer to
+[snarkOS](https://github.com/ProvableHQ/snarkOS) for devnet setup.
 
-## Using Aleo API
+## Deploying
 
-```
-http://localhost:3030/testnet3/latest/block
-http://localhost:3030/testnet3/peers/all
-
-```
+Pushing to `main` with changes under `frontend/` builds and deploys the
+site to GitHub Pages via `.github/workflows/deploy.yml`.

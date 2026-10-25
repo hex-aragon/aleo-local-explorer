@@ -1,0 +1,17 @@
+{
+  "name": "aleo-local-explorer-indexer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Optional local indexer that backfills and stores Aleo devnet block history in SQLite, so the explorer frontend can show more than just live data.",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.9.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
