@@ -5,12 +5,22 @@ import { CopyableHash } from '../components/common/CopyableHash'
 import { RawJsonView } from '../components/common/RawJsonView'
 import { StatCard } from '../components/common/StatCard'
 
+// Each entry in `transactions` is a ConfirmedTransaction: { status, type, index, transaction: { id, ... }, finalize }
 function txId(tx: unknown): string | undefined {
-  const direct = get(tx, ['id'])
-  if (typeof direct === 'string') return direct
   const nested = get(tx, ['transaction', 'id'])
   if (typeof nested === 'string') return nested
-  return undefined
+  const direct = get(tx, ['id'])
+  return typeof direct === 'string' ? direct : undefined
+}
+
+function txType(tx: unknown): string | undefined {
+  const t = get(tx, ['type'])
+  return typeof t === 'string' ? t : undefined
+}
+
+function txStatus(tx: unknown): string | undefined {
+  const s = get(tx, ['status'])
+  return typeof s === 'string' ? s : undefined
 }
 
 export function BlockDetail() {
@@ -39,6 +49,8 @@ export function BlockDetail() {
   const ratifications = get(block, ['ratifications'])
   const transactions = get(block, ['transactions'])
   const abortedTxIds = get(block, ['aborted_transaction_ids'])
+  const solutions = get(block, ['solutions'])
+  const abortedSolutionIds = get(block, ['aborted_solution_ids'])
 
   return (
     <div className="flex flex-col gap-6">
@@ -80,14 +92,33 @@ export function BlockDetail() {
             <ul>
               {transactions.map((tx, i) => {
                 const id = txId(tx)
+                const type = txType(tx)
+                const status = txStatus(tx)
                 return (
-                  <li key={id ?? i} className="border-b border-border px-4 py-2.5 text-sm last:border-0">
+                  <li
+                    key={id ?? i}
+                    className="flex flex-wrap items-center gap-2 border-b border-border px-4 py-2.5 text-sm last:border-0"
+                  >
                     {id ? (
                       <Link to={`/transaction/${id}`} className="font-mono text-accent hover:underline">
                         {id}
                       </Link>
                     ) : (
                       <RawJsonView data={tx} label={`Transaction #${i}`} />
+                    )}
+                    {type && (
+                      <span className="rounded-full border border-border px-2 py-0.5 text-xs text-text-dim">
+                        {type}
+                      </span>
+                    )}
+                    {status && (
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs ${
+                          status === 'accepted' ? 'text-success' : 'text-danger'
+                        }`}
+                      >
+                        {status}
+                      </span>
                     )}
                   </li>
                 )
@@ -114,11 +145,29 @@ export function BlockDetail() {
         </section>
       </div>
 
+      {Array.isArray(solutions) && solutions.length > 0 && (
+        <section>
+          <h2 className="mb-2 text-sm font-semibold text-text-dim">Solutions ({solutions.length})</h2>
+          <div className="rounded-xl border border-border bg-surface p-4">
+            <RawJsonView data={solutions} label="Solutions (raw)" />
+          </div>
+        </section>
+      )}
+
       {Array.isArray(abortedTxIds) && abortedTxIds.length > 0 && (
         <section>
           <h2 className="mb-2 text-sm font-semibold text-text-dim">Aborted transactions</h2>
           <div className="rounded-xl border border-border bg-surface p-4">
             <RawJsonView data={abortedTxIds} label="Aborted transaction IDs" />
+          </div>
+        </section>
+      )}
+
+      {Array.isArray(abortedSolutionIds) && abortedSolutionIds.length > 0 && (
+        <section>
+          <h2 className="mb-2 text-sm font-semibold text-text-dim">Aborted solutions</h2>
+          <div className="rounded-xl border border-border bg-surface p-4">
+            <RawJsonView data={abortedSolutionIds} label="Aborted solution IDs" />
           </div>
         </section>
       )}
