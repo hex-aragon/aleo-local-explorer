@@ -3,6 +3,8 @@
 A block explorer for your own local Aleo devnet node — point it at your
 node's RPC address and browse blocks, transactions, and peers.
 
+![Aleo Local Explorer dashboard](./local-aleo-block-explorer.png)
+
 Live, hosted version: **https://hex-aragon.github.io/aleo-local-explorer/**
 
 It's a static site with no backend of its own — it talks directly to
